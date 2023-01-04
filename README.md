@@ -1,92 +1,200 @@
 # Media Query Plugin
 
+[![Npm Version](https://badge.fury.io/js/media-query-plugin.svg)](https://www.npmjs.com/package/media-query-plugin) 
+[![Build Status](https://travis-ci.com/SassNinja/media-query-plugin.svg?branch=master)](https://travis-ci.com/SassNinja/media-query-plugin) 
+[![Month Downloads](https://img.shields.io/npm/dm/media-query-plugin.svg)](http://npm-stat.com/charts.html?package=media-query-plugin)
 
+Have you ever thought about extracting your media queries from your CSS so a mobile user doesn't have to load desktop specific CSS?
+If so this plugin is what you need!
 
-## Getting started
+When writing CSS with the help of a framework (such as [Bootstrap](https://getbootstrap.com/) or [Foundation](https://get.foundation/sites.html)) and with a modular design pattern you'll mostly end up with CSS that contains all media queries. Using this plugin lets you easily extract the media queries from your CSS and load it async.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+So instead of forcing the user to load this
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
+```css
+.foo { color: red }
+@media print, screen and (min-width: 75em) {
+    .foo { color: blue }
+}
+.bar { font-size: 1rem }
 ```
-cd existing_repo
-git remote add origin http://gitlab.glitchr.dev/public-repository/javascript/media-query-plugin.git
-git branch -M main
-git push -uf origin main
+
+he only has to load this always
+
+```css
+.foo { color: red }
+.bar { font-size: 1rem }
 ```
 
-## Integrate with your tools
+and on desktop viewport size this in addition
 
-- [ ] [Set up project integrations](http://gitlab.glitchr.dev/public-repository/javascript/media-query-plugin/-/settings/integrations)
+```css
+@media print, screen and (min-width: 75em) {
+    .foo { color: blue }
+}
+```
 
-## Collaborate with your team
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+## Prerequisites
 
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+You should already have a working webpack configuration before you try to use this plugin. If you haven't used webpack yet please go through the [webpack guide](https://webpack.js.org/guides/) first and start using this awesome tool for your assets mangement!
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Simply install the package with your prefered package manager.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- npm
+```bash
+npm install media-query-plugin --save-dev
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- yarn
+```bash
+yarn add media-query-plugin --dev
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Let's get started
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### 1. Loader
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+The plugin comes together with a loader which takes care of the CSS extraction from the source and provides it for the injection afterwards.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+**Important:** make sure the loader receives plain CSS so place it between the css-loader and the sass-loader/less-loader.
 
-## License
-For open source projects, say how it is licensed.
+```javascript
+const MediaQueryPlugin = require('media-query-plugin');
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.scss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    MediaQueryPlugin.loader,
+                    'postcss-loader',
+                    'sass-loader'
+                ]
+            }
+        ]
+    }
+};
+```
+
+### 2. Plugin
+
+Add the plugin to your webpack config. It will inject the extracted CSS of the loader after the compilation. To identify the target file for the injection it'll look for `[name]-[query]`. So if CSS with the query `desktop` is extracted from `example.scss`, it'll look for `example-desktop` to do the injection. In case there's no match the extracted CSS gets simply emited as CSS file (it doesn't disappear in nirvana :wink:).
+
+```javascript
+const MediaQueryPlugin = require('./plugins/media-query-plugin');
+
+module.exports = {
+    plugins: [
+        new MediaQueryPlugin({
+            include: [
+                'example'
+            ],
+            queries: {
+                'print, screen and (min-width: 75em)': 'desktop'
+            }
+        })
+    ]
+};
+```
+
+### 3. Use Extracted Files
+
+If you import the extracted CSS (mostly as dynamic import with viewport condition), webpack will try to resolve that import and throw an error if the file does not exist. Thus you have to create those files manually before running webpack. Empty files as placeholder do the job (the get filled later by the plugin).
+
+**Important:** as mentioned above the name of those files must follow the pattern `[name]-[query]` so an example file could be `example-desktop.scss`
+
+```javascript
+import './example.scss';
+
+if (window.innerWidth >= 960) {
+    import(/* webpackChunkName: 'example-desktop' */ './example-desktop.scss');
+}
+```
+
+## Options
+
+The following options are available.
+
+| name        | mandatory |
+| ----------- | --------- |
+| include     | yes       |
+| queries     | yes       |
+| groups      | no        |
+
+### include
+
+Each chunk (which uses the loader) gets checked if its name matches this option. In case of a match each query specified in the `queries` options gets extracted from the chunk.
+
+Possible types
+- array (e.g. `['example']`)
+- regex (e.g. `/example/`)
+- boolean (e.g. `true`)
+
+### queries
+
+This option tells the plugin which media queries are supposed to get extracted. If a media query doesn't match it'll stay untouched. Otherwise it gets extracted and afterwards injected.
+
+**Important:** make sure the queries match 100% the source CSS rule excl the `@media`.
+
+**Tip:** you can use the same name for different media queries to concatenate them (e.g. desktop portrait and desktop landscape)
+
+```javascript
+queries: {
+    'print, screen and (max-width: 60em) and (orientation: portrait)': 'desktop',
+    'print, screen and (max-width: 60em) and (orientation: landscape)': 'desktop'
+}
+```
+
+### groups
+
+By default the name of the extracted CSS file(s) is `[chunk]-[query]`. This option lets you map chunk names to a specific group name what results in `[group]-[query]`.
+So the following code would generate a `app-desktop.css` instead of `exampleA-desktop.css` and `exampleB-desktop.css`. This can be useful when working with [splitChunks](https://webpack.js.org/plugins/split-chunks-plugin/).
+
+```javascript
+groups: {
+    app: ['exampleA', 'exampleB']
+}
+```
+
+**Tip:** you can also use regex to target chunks
+```javascript
+groups: {
+    app: /^example/
+}
+```
+
+## Other Webpack Plugins
+
+This plugin plays together well with the following other webpack plugins.
+
+### mini-css-extract-plugin
+
+If you don't want the CSS included in your JS but emit it as external files, you can use the [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin). The media query plugin automatically recognizes the additional CSS chunks and even takes over the plugins filename option!
+
+### html-webpack-plugin
+
+If you're using the hash feature of webpack (e.g. `[name].[hash].js`) you might also be using the [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) to inject the hashed files into your templates. Good news – the media query plugin supports it! It hooks into the plugin and makes extracted files available in your HTML template via `htmlWebpackPlugin.files.extracted.js` or `htmlWebpackPlugin.files.extracted.css`.
+
+This let you inject something as `<link rel="stylesheet" href="..." media="...">` so that the extracted files get downloaded but not applied if not necessary (reduces render blocking time). However most of the time it's better to use dynamic imports for the extracted CSS to achieve best performance.
+
+Compared to the regular files (`htmlWebpackPlugin.files.js` or `htmlWebpackPlugin.files.css`) the extracted files object does not have the structure `[file, file]` but `[{file:file,query:query}, {file:file,query:query}]`. Keep this in mind when using it (or check out the example [template](examples/webpack/src/index.hbs)).
+
+## Not using webpack?
+
+This plugin is built for webpack only and can't be used with other module bundlers (such as [FuseBox](https://fuse-box.org/)) or task runners (such as [Gulp](https://gulpjs.com/)). However if you can't or don't want to use webpack but nevertheless want to extract media queries you should check out my [PostCSS plugin](https://github.com/SassNinja/postcss-extract-media-query) which supports much more tools.
+
+However it also breaks out of the bundler/runner and emits files within the PostCSS plugin which will ignore all other pipes in your task.
+So it's highly recommended to use this webpack plugin instead of the PostCSS alternative!
+
+## Contribution
+
+This plugin has been built because I wasn't able to find a webpack solution for such a trivial task of splitting files by media query and loading them async. It works for my use cases by I'm pretty sure it can get more improved. So if you miss any feature don't hesitate to create an issue as feature request or to create a PR to do the job.
+
+**And last but not least, if you like this plugin please give it a star on github and share it!**
+
