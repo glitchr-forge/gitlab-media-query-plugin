@@ -81,7 +81,7 @@ module.exports = class MediaQueryPlugin {
                     // while considering hash
                     const basename = this.options.filename
                                         .replace('[name]', mediaKey)
-                                        .replace(/\[(content|chunk)?hash\]/, hash)
+					.replace(/\[(content|chunk)?hash(?:\:[0-9]*)\]/, hash)
                                         .replace(/\.[^.]+$/, '');
 
                     // if there's no chunk for the extracted media, create one
