@@ -1,8 +1,7 @@
 {
-  "name": "media-query-plugin",
+  "name": "@glitchr/media-query-plugin",
   "version": "1.5.1",
   "description": "Webpack plugin for media query extraction.",
-  "author": "Kai Falkowski",
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
