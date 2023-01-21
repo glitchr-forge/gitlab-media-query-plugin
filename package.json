@@ -1,6 +1,6 @@
 {
   "name": "@glitchr/media-query-plugin",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Webpack plugin for media query extraction.",
   "license": "MIT",
   "access": "public",
