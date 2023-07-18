@@ -57,17 +57,11 @@ module.exports = class MediaQueryPlugin {
 
         compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
 
-            const hasDeprecatedChunks = (compilation.chunks instanceof Set) === false; // webpack < 5
-
-            if (hasDeprecatedChunks) {
-                console.warn('\n\n[WARNING] media-query-plugin is going to drop webpack 4 support with the next major version so you should consider upgrading asap!\n\n');
-            }
-
             const processAssets = (compilationAssets, cb) => {
 
                 const chunks = compilation.chunks;
                 const chunkIds = [...chunks].map(chunk => chunk.id);
-                const assets =  hasDeprecatedChunks ? compilation.assets : compilationAssets;
+                const assets =  compilationAssets;
 
                 store.getMediaKeys().forEach(mediaKey => {
 
@@ -90,11 +84,7 @@ module.exports = class MediaQueryPlugin {
                         mediaChunk.id = mediaKey;
                         mediaChunk.ids = [mediaKey];
 
-                        if (hasDeprecatedChunks) {
-                            chunks.push(mediaChunk);
-                        } else {
-                            chunks.add(mediaChunk);
-                        }
+                        chunks.add(mediaChunk);
                     }
 
                     const chunk = [...chunks].filter(chunk => chunk.id === mediaKey)[0];
@@ -136,20 +126,13 @@ module.exports = class MediaQueryPlugin {
                                 } else {
                                     content = new ConcatSource(assets[file], content);
                                 }
-                                if (hasDeprecatedChunks) {
-                                    chunk.files.splice(chunk.files.indexOf(file), 1);
-                                } else {
-                                    chunk.files.delete(file);
-                                }
+
+                                chunk.files.delete(file);
                                 delete assets[file];
                             }
                         }
-
-                        if (hasDeprecatedChunks) {
-                            chunk.files.push(`${basename}.js`);
-                        } else {
-                            chunk.files.add(`${basename}.js`);
-                        }
+                        
+                        chunk.files.add(`${basename}.js`);
                         assets[`${basename}.js`] = content;
                     }
 
@@ -162,20 +145,12 @@ module.exports = class MediaQueryPlugin {
                             if (assets[file]) {
                                 content = new ConcatSource(assets[file], content);
 
-                                if (hasDeprecatedChunks) {
-                                    chunk.files.splice(chunk.files.indexOf(file), 1);
-                                } else {
-                                    chunk.files.delete(file);
-                                }
+                                chunk.files.delete(file);
                                 delete assets[file];
                             }
                         });
 
-                        if (hasDeprecatedChunks) {
-                            chunk.files.push(`${basename}.css`);
-                        } else {
-                            chunk.files.add(`${basename}.css`);
-                        }
+                        chunk.files.add(`${basename}.css`);
                         assets[`${basename}.css`] = content;
                     }
 
@@ -193,7 +168,7 @@ module.exports = class MediaQueryPlugin {
                 };
                 const sortedChunks = [...chunks].sort(chunksCompareFn);
 
-                compilation.chunks = hasDeprecatedChunks ? sortedChunks : new Set(sortedChunks);
+                compilation.chunks = new Set(sortedChunks);
 
                 const assetsCompareFn = (a, b) => {
                     // take file extension out of sort
@@ -208,31 +183,18 @@ module.exports = class MediaQueryPlugin {
                         return 0;
                 };
                 const sortedAssets = Object.keys(assets).sort(assetsCompareFn).reduce((res, key) => (res[key] = assets[key], res), {});
-
-                if (hasDeprecatedChunks) {
-                    compilation.assets = sortedAssets;
-                } else {
-                    compilationAssets = sortedAssets;
-                }
+                compilationAssets = sortedAssets;
 
                 cb();
             };
 
-            // Since webpack 4 doesn't have the processAssets hook, we need the following condition.
-            // In future (once webpack 4 support has been dropped) this can be simplified again.
-            if (hasDeprecatedChunks) {
-                compilation.hooks.additionalAssets.tapAsync(pluginName, (cb) => {
-                    processAssets(compilation.assets, cb);
-                });
-            } else {
-                compilation.hooks.processAssets.tapAsync({
-                    name: pluginName,
-                    stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
-                }, (assets, cb) => {
-                    processAssets(assets, cb);
-                });
-            }
-
+            compilation.hooks.processAssets.tapAsync({
+                name: pluginName,
+                stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+            }, (assets, cb) => {
+                processAssets(assets, cb);
+            });
+            
             // consider html-webpack-plugin and provide extracted files
             // which can be accessed in templates via htmlWebpackPlugin.files.extracted
             // { css: [{file:'',query:''},{file:'',query:''}] }

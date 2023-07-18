@@ -19,8 +19,10 @@ class MediaQueryStore {
 
         if (typeof this.media[key] !== 'object') {
             this.media[key] = [];
+            this.media[key].push(data);
         }
-        this.media[key].push(data);
+
+        this.media[key] = this.media[key].map(media => media.filename == filename ? data : media);
     }
 
     getMedia(key) {
