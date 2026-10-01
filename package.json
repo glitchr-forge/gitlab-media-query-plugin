@@ -36,6 +36,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@gitlab.glitchr.dev:public-repository/javascript/media-query-plugin.git"
+    "url": "git+https://github.com/glitchr-studio/media-query-plugin.git"
   }
 }
